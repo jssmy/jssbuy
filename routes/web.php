@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/','PublicController@index')->name('index');
 
 Auth::routes();
 
