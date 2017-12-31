@@ -1,0 +1,5 @@
+{
+"COMPOSER_VENDOR_DIR": "htdocs/vendor",
+"WEBDIR": "htdocs/public",
+"PHP_EXTENSIONS": ["openssl", "tokenizer","mbstring", "pdo","mysqli","pdo_mysql","pdo_odbc",""]
+}
