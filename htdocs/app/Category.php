@@ -6,17 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    
+    //
+    protected $fillable=['slug','name'];
+    protected $table='categories';
 
-	protected $guarded=['id','slug'];
-	protected $table='categories';
-
-	//relationship
-	public function products()
-	{
-		return $this->hasMany('App\Product');
-	}
-
-
-
+    public function products()
+    {
+    	return $this->hasMany('\App\Product');
+    }
 }

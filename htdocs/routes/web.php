@@ -11,8 +11,37 @@
 |
 */
 
-Route::get('/','PublicController@index')->name('index');
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/end', function () {
+    //return view('welcome');
+})->middleware('auth_user');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::get('/register/verify/{confirmation_code}','Auth\RegisterController@verify')->name('verify');
+
+
+Route::group(['middleware' => ['check_user']], function () {
+    //
+    Route::resource('product','ProductController');
+
+	Route::resource('category','CategoryController');
+});
+
+Route::get('/confirmation',function(){
+
+
+	return view('auth.passwords.confirmation')
+	->with('name','Joset Manihuari')
+	->with('confirmation_code','assdasdadasdasdasd3we');
+});
+
+
+
+

@@ -6,23 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-   
-	protected $guarded 	= ['id','slug'];
-	protected $table		= 'products';
+    //
+	protected $table='products';
+	protected $guarded=['id'];
+	
 
-
-	//relationship
 	public function category()
 	{
-		return $this->belongsTo('App\Category');
+		return $this->belongsTo('\App\Category');
 	}
 
-	public function lines()
+	public function linesorders()
 	{
-		return $this->hasMany('App\LineOrder');
+		return $this->hasMany('\App\LineOrder');
 	}
-
-
-
 
 }
+

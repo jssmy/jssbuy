@@ -6,6 +6,11 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Http\Controllers\Slug as Slug;
+use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Input;
+
+use App\Mail\send;
 
 class RegisterController extends Controller
 {
@@ -27,7 +32,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/login';
 
     /**
      * Create a new controller instance.
@@ -38,7 +43,7 @@ class RegisterController extends Controller
     {
         $this->middleware('guest');
     }
-
+ 
     /**
      * Get a validator for an incoming registration request.
      *
@@ -47,10 +52,26 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        //dd($data);
+        
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            //'slug'      => 'required|string|max:255', 
+            'name'      => 'required|string|max:255',
+            'lastname'  => 'required|string|max:255',
+            'birthday'  =>  'required|before:today',
+            'genere'    =>  'required|in:F,M',
+            'email'     => 'required|string|email|max:255|unique:users',
+            'password'  => 'required|string|min:6|confirmed',
+        ]);
+    }
+
+    protected function validator_url(array $data)
+    {
+
+
+        return Validator::make($data, [
+            'slug'      => 'required|string|max:255|unique:users', 
+            
         ]);
     }
 
@@ -62,10 +83,58 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+
+
+        
+       // $this->validator_url($data)->validate();
+
+       //dd($data);
+        //dd($data);
+        $slug = new Slug();
+        $url  = $slug->make($data['name'].' '.$data['lastname']);
+        $data['slug'] = $url;
+        $confirmation_code = $data['_token'];
+        User::create([
+            'slug'      => $data['slug'],
+            'name'      => $data['name'],
+            'lastname'  => $data['lastname'],
+            'birthday'  => $data['birthday'],
+            'genere'    => $data['genere'],
+            'email'     => $data['email'],
+            'confirmation'=>$data['_token'],
+            'password'  => bcrypt($data['password']),
         ]);
+
+        \Mail::to($data['email'])->send(new send($data['name'],$data['_token']));
+
+
+       /*\Mail::send('auth.passwords.confirmation', array(
+            'name'         =>Input::get('name'),
+            'confirmation_code' =>$data['_token']
+
+
+            ), function($message){
+         
+                $message->from('dontreplay@gmail.com','JssMy');
+                $message->to(Input::get('email'), Input::get('name').' '.Input::get('lastname'));
+                $message->subject('Gracias por registrarse');
+    });
+*/
+   
+
     }
+
+
+    public function verify($confirmation_code){
+
+
+dd($confirmation_code);
+
+        //return view();
+    }
+
+
+
+
+
 }

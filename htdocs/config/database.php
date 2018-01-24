@@ -1,10 +1,6 @@
 <?php
-    $services = json_decode(getenv('VCAP_SERVICES'), true);
-    $sqlCreds = $services['cleardb'][0]['credentials'];
-return [
 
-    
-    
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -44,12 +40,12 @@ return [
         ],
 
         'mysql' => [
-            'driver'    => 'mysql',
-            'host'      => $sqlCreds['hostname'],
-            'port'      => '3306',
-            'database'  => $sqlCreds['name'],
-            'username'  => $sqlCreds['username'],
-            'password'  => $sqlCreds['password'],
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

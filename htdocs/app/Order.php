@@ -7,20 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     //
-    protected $guarded	=['id','recived','shipped'];
-    protected $table		='orders';
-
-    //relationship
-    public function lines()
-    {
-    	return $this->hasMany('App\LineOrder') ;
-    }
+    protected $fillable=['recived','shipped','total','user_id'];
+    protected $table='orders';
 
     public function user()
     {
-    	return $this->belongsTo('App\User');
+    	return $this->belongsTo('\App\User');
     }
 
-
-    
+    public function lines()
+    {
+    	return $this->hasMany('\App\LineOrder');
+    }
 }
